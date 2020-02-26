@@ -17,6 +17,20 @@ export function hijack(
   proxyParam: string = "__proxy",
   proxyOrigin: string = "http://localhost:4000"
 ) {
+  /**
+   * 添加协议头
+   */
+  if (targetUrl.startsWith("//")) {
+    targetUrl = window.location.protocol + ":" + targetUrl;
+  }
+
+  /**
+   * 如果是相对路径请求URL，则直接返回
+   */
+  if(/^https?:\/\//.test(targetUrl)) {
+    return targetUrl;
+  }
+
   try {
     const proxy = new URL(proxyOrigin);
     proxy.searchParams.set(proxyParam, targetUrl);
@@ -26,6 +40,11 @@ export function hijack(
   return targetUrl;
 }
 
+/**
+ * 全局代理函数
+ * @param proxyParam 
+ * @param proxyOrigin 
+ */
 export function hijackGlobally(
   proxyParam: string = "__proxy",
   proxyOrigin: string = "http://localhost:4000"
